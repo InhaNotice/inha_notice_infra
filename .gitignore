@@ -64,5 +64,5 @@ database/
 *.db
 docs/
 
-# Volumns
-volumns/
+# Volumes
+volumes/

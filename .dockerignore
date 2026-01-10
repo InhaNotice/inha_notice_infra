@@ -62,5 +62,5 @@ docker-compose.yaml
 # Docs
 docs/
 
-# Volumns
-volumns/
+# Volumes
+volumes/
