@@ -63,3 +63,6 @@ report.[0-9]*
 database/
 *.db
 docs/
+
+# Volumns
+volumns/
