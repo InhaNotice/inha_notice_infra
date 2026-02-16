@@ -43,7 +43,7 @@ services:
       timeout: 5s
       retries: 3
   cloudflare-tunnel:
-    image: cloudflare/cloudflared:latest
+    image: cloudflare/cloudflared:2026.2.0
     container_name: inha_notice_tunnel
     restart: unless-stopped
     networks:
