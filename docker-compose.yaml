@@ -50,7 +50,7 @@ services:
       - inha_notice_network
     env_file:
       - ./secret/cloudflare/.env
-    command: tunnel run
+    command: tunnel --no-autoupdate run
 
 networks:
   inha_notice_network:
