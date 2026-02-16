@@ -21,12 +21,12 @@ services:
       - ./volumes/mysql:/var/lib/mysql
     environment:
       - TZ=Asia/Seoul
-    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
-    healthcheck:
-      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root -p$$MYSQL_ROOT_PASSWORD"]
-      interval: 30s
-      timeout: 5s
-      retries: 3
+    command: >
+      --character-set-server=utf8mb4 
+      --collation-server=utf8mb4_unicode_ci
+      --skip-log-bin
+      --innodb_flush_log_at_trx_commit=2
+      --performance_schema=OFF
   redis:
     image: redis:8.4.1-alpine
     container_name: inha_notice_redis
@@ -37,11 +37,6 @@ services:
       - "127.0.0.1:6379:6379"
     volumes:
       - ./volumes/redis:/data
-    healthcheck:
-      test: [ "CMD", "redis-cli", "ping" ]
-      interval: 30s
-      timeout: 5s
-      retries: 3
   cloudflare-tunnel:
     image: cloudflare/cloudflared:2026.2.0
     container_name: inha_notice_tunnel
