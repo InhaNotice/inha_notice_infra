@@ -4,39 +4,53 @@
 # For full license text, see the LICENSE file in the root directory or at
 # https://opensource.org/license/mit
 # Author: Junho Kim
-# Latest Updated Date: 2026-02-12
+# Latest Updated Date: 2026-02-16
 
 services:
   mysql:
     image: mysql:8.4
     container_name: inha_notice_mysql
     restart: unless-stopped
+    networks:
+      - inha_notice_network
+    env_file:
+      - ./secret/mysql/.env
     ports:
       - "127.0.0.1:3306:3306"
-    env_file:
-      - secret/mysql/.env
     volumes:
       - ./volumes/mysql:/var/lib/mysql
     environment:
       - TZ=Asia/Seoul
     command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
-    networks:
-      - inha_notice_network
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root -p$$MYSQL_ROOT_PASSWORD"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
   redis:
     image: redis:8.4.1-alpine
     container_name: inha_notice_redis
     restart: unless-stopped
+    networks:
+      - inha_notice_network
     ports:
       - "127.0.0.1:6379:6379"
     volumes:
       - ./volumes/redis:/data
-    networks:
-      - inha_notice_network
     healthcheck:
       test: [ "CMD", "redis-cli", "ping" ]
-      interval: 10s
+      interval: 30s
       timeout: 5s
       retries: 3
+  cloudflare-tunnel:
+    image: cloudflare/cloudflared:latest
+    container_name: inha_notice_tunnel
+    restart: unless-stopped
+    networks:
+      - inha_notice_network
+    env_file:
+      - ./secret/cloudflare/.env
+    command: tunnel run
 
 networks:
   inha_notice_network:
